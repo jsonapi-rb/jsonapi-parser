@@ -1,4 +1,4 @@
-require 'jsonapi/parser'
+require 'spec_helper'
 
 describe JSONAPI::Parser, '.parse_response!' do
   it 'succeeds on nil data' do
