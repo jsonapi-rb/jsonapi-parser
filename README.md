@@ -6,6 +6,7 @@ Ruby gem for validating [JSON API](http://jsonapi.org) documents.
 [![Gem Version](https://badge.fury.io/rb/jsonapi-parser.svg)](https://badge.fury.io/rb/jsonapi-parser)
 [![Build Status](https://secure.travis-ci.org/jsonapi-rb/parser.svg?branch=master)](http://travis-ci.org/jsonapi-rb/parser?branch=master)
 [![codecov](https://codecov.io/gh/jsonapi-rb/parser/branch/master/graph/badge.svg)](https://codecov.io/gh/jsonapi-rb/parser)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/jsonapi-rb/Lobby)
 
 ## Installation
 ```ruby
