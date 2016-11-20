@@ -188,11 +188,11 @@ module JSONAPI
       def self.parse_errors!(errors)
         ensure!(errors.is_a?(Array),
                 'Top level errors member must be an array.')
-        errors.each { |error| parse_ensure!(error) }
+        errors.each { |error| parse_error!(error) }
       end
 
       # @api private
-      def self.parse_ensure!(error)
+      def self.parse_error!(_error)
         # NOTE(beauby): Do nothing for now, as errors are under-specified as of
         #   JSONAPI 1.0
       end
