@@ -4,12 +4,7 @@ module JSONAPI
   module Parser
     class Document
       TOP_LEVEL_KEYS = %w(data errors meta).freeze
-      EXTENDED_TOP_LEVEL_KEYS =
-        (TOP_LEVEL_KEYS + %w(jsonapi links included)).freeze
-      RESOURCE_KEYS = %w(id type attributes relationships links meta).freeze
       RESOURCE_IDENTIFIER_KEYS = %w(id type).freeze
-      EXTENDED_RESOURCE_IDENTIFIER_KEYS =
-        (RESOURCE_IDENTIFIER_KEYS + %w(meta)).freeze
       RELATIONSHIP_KEYS = %w(data links meta).freeze
       RELATIONSHIP_LINK_KEYS = %w(self related).freeze
       JSONAPI_OBJECT_KEYS = %w(version meta).freeze
@@ -22,9 +17,6 @@ module JSONAPI
         ensure!(document.is_a?(Hash),
                 'A JSON object MUST be at the root of every JSON API request ' \
                 'and response containing data.')
-        unexpected_keys = document.keys - EXTENDED_TOP_LEVEL_KEYS
-        ensure!(unexpected_keys.empty?,
-                "Unexpected members at top level: #{unexpected_keys}.")
         ensure!(!(document.keys & TOP_LEVEL_KEYS).empty?,
                 "A document MUST contain at least one of #{TOP_LEVEL_KEYS}.")
         ensure!(!(document.key?('data') && document.key?('errors')),
@@ -59,9 +51,6 @@ module JSONAPI
       def self.parse_primary_resource!(res)
         ensure!(res.is_a?(Hash), 'A resource object must be an object.')
         ensure!(res.key?('type'), 'A resource object must have a type.')
-        unexpected_keys = res.keys - RESOURCE_KEYS
-        ensure!(unexpected_keys.empty?,
-                "Unexpected members for primary resource: #{unexpected_keys}")
         parse_attributes!(res['attributes']) if res.key?('attributes')
         parse_relationships!(res['relationships']) if res.key?('relationships')
         parse_links!(res['links']) if res.key?('links')
@@ -90,9 +79,6 @@ module JSONAPI
       # @api private
       def self.parse_relationship!(rel)
         ensure!(rel.is_a?(Hash), 'A relationship object must be an object.')
-        unexpected_keys = rel.keys - RELATIONSHIP_KEYS
-        ensure!(unexpected_keys.empty?,
-                "Unexpected members for relationship: #{unexpected_keys}")
         ensure!(!rel.keys.empty?,
                 'A relationship object MUST contain at least one of ' \
                 "#{RELATIONSHIP_KEYS}")
@@ -119,10 +105,6 @@ module JSONAPI
       def self.parse_resource_identifier!(ri)
         ensure!(ri.is_a?(Hash),
                 'A resource identifier object must be an object')
-        unexpected_keys = ri.keys - EXTENDED_RESOURCE_IDENTIFIER_KEYS
-        ensure!(unexpected_keys.empty?,
-                'Unexpected members for resource identifier: ' \
-                "#{unexpected_keys}.")
         ensure!(RESOURCE_IDENTIFIER_KEYS & ri.keys == RESOURCE_IDENTIFIER_KEYS,
                 'A resource identifier object MUST contain ' \
                 "#{RESOURCE_IDENTIFIER_KEYS} members.")
