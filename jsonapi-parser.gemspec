@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'Validate JSONAPI response documents, resource ' \
                        'creation/update payloads, and relationship ' \
                        'update payloads.'
-  spec.homepage      = 'https://github.com/jsonapi-rb/parser'
+  spec.homepage      = 'https://github.com/jsonapi-rb/jsonapi-parser'
   spec.license       = 'MIT'
 
   spec.files         = Dir['README.md', 'lib/**/*']
