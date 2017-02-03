@@ -92,4 +92,61 @@ describe JSONAPI::Parser, '.parse_response!' do
       'A resource identifier object MUST contain ["id", "type"] members.'
     )
   end
+
+  context 'with valid included relationship' do
+    before(:each) do
+      @payload = {
+        'data' => [
+          {
+            'type' => 'articles',
+            'id' => '1',
+            'relationships' => {
+              'author' => {
+                'data' => { 'type' => 'people', 'id' => '9' }
+              }
+            }
+          }
+        ],
+        'included' => [
+          {
+            'type' => 'people',
+            'id' => '9'
+          }
+        ]
+      }
+    end
+
+    it 'succeeds with valid includes' do
+      expect { JSONAPI.parse_response!(@payload) }.not_to raise_error
+    end
+  end
+
+  context 'with invalid included relationship' do
+    before(:each) do
+      @payload = {
+        'data' => [
+          {
+            'type' => 'articles',
+            'id' => '1',
+            'relationships' => {
+              'author' => {
+                'data' => { 'type' => 'people', 'id' => '9' }
+              }
+            }
+          }
+        ],
+        'included' => {
+          'type' => 'people',
+          'id' => '9'
+        }
+      }
+    end
+
+    it 'fails when included relationships are not an array' do
+      expect { JSONAPI.parse_response!(@payload) }.to raise_error(
+        JSONAPI::Parser::InvalidDocument,
+        'Top level included member must be an array.'
+      )
+    end
+  end
 end
