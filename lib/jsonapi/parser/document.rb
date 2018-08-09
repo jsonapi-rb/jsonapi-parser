@@ -36,7 +36,7 @@ module JSONAPI
       # @api private
       def self.parse_data!(data)
         if data.is_a?(Hash)
-          parse_resource!(data)
+          parse_primary_resource!(data)
         elsif data.is_a?(Array)
           data.each { |res| parse_resource!(res) }
         elsif data.nil?
