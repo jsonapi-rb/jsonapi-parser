@@ -72,7 +72,23 @@ describe JSONAPI::Parser, '.parse_response!' do
     expect { JSONAPI.parse_response!(payload) }.to_not raise_error
   end
 
-  it 'fails when an element is missing type or id' do
+  it 'fails when a top-level data array resource object is missing id' do
+    payload = {
+      'data' => [
+        {
+          'type' => 'articles',
+          'attributes' => {'title' => 'JSON API paints my bikeshed!'}
+        }
+      ]
+    }
+
+    expect { JSONAPI.parse_response!(payload) }.to raise_error(
+      JSONAPI::Parser::InvalidDocument,
+      'A resource object must have an id.'
+    )
+  end
+
+  it 'fails when a relationship object is missing id' do
     payload = {
       'data' => [
         {
@@ -91,5 +107,29 @@ describe JSONAPI::Parser, '.parse_response!' do
       JSONAPI::Parser::InvalidDocument,
       'A resource identifier object MUST contain ["id", "type"] members.'
     )
+  end
+
+  it 'fails when the top-level resource object has no type' do
+    payload = {
+      'data' => {
+        'id' => '1'
+      }
+    }
+
+    expect { JSONAPI.parse_response!(payload) }.to raise_error(
+      JSONAPI::Parser::InvalidDocument,
+      'A resource object must have a type.'
+    )
+  end
+
+  it 'passes when the top-level resource object has no id' do
+    payload = {
+      'data' => {
+        'type' => 'articles',
+        'attributes' => {'title' => 'JSON API paints my bikeshed!'}
+      }
+    }
+
+    expect { JSONAPI.parse_response!(payload) }.to_not raise_error
   end
 end
